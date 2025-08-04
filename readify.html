@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Readify - Book Recommendation System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(135deg, #ffe3e3, #dbeeff, #e0ffe0);
+      background-size: 400% 400%;
+      animation: bgShift 18s ease infinite;
+      color: #333;
+    }
+
+    @keyframes bgShift {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    header {
+      text-align: center;
+      padding: 30px 20px;
+      background-color: rgba(255,255,255,0.6);
+    }
+
+    header h1 {
+      font-size: 3rem;
+      color: #2b2b2b;
+    }
+
+    nav {
+      background-color: #444;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: #fff;
+      padding: 15px 20px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    nav a:hover {
+      background-color: #666;
+    }
+
+    .tab-content {
+      display: none;
+      padding: 30px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .active {
+      display: block;
+    }
+
+    .search-bar {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .search-bar input {
+      padding: 10px;
+      width: 60%;
+      border-radius: 8px;
+      border: 1px solid #aaa;
+      font-size: 1rem;
+    }
+
+    .book-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 25px;
+    }
+
+    .book {
+      background-color: rgba(255,255,255,0.8);
+      border-radius: 15px;
+      padding: 15px;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .book:hover {
+      transform: scale(1.05);
+    }
+
+    .book img {
+      width: 120px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .book a {
+      text-decoration: none;
+      color: #1a237e;
+      font-weight: 600;
+    }
+
+    .genres button {
+      background-color: #4e88f1;
+      color: #fff;
+      margin: 5px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .genres button:hover {
+      background-color: #2e5cb8;
+    }
+
+    .form-container {
+      max-width: 400px;
+      margin: auto;
+      background-color: rgba(255,255,255,0.8);
+      padding: 30px;
+      border-radius: 10px;
+    }
+
+    .form-container input {
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #aaa;
+      font-size: 1rem;
+    }
+
+    .form-container button {
+      width: 100%;
+      padding: 10px;
+      background-color: #444;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: rgba(0,0,0,0.05);
+      font-size: 0.9rem;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>📚 Readify</h1>
+    <p>Your Personal Book Recommendation System</p>
+  </header>
+
+  <nav>
+    <a href="#" onclick="showTab('home')">Home</a>
+    <a href="#" onclick="showTab('genre')">Genre</a>
+    <a href="#" onclick="showTab('catalogue')">Catalogue</a>
+    <a href="#" onclick="showTab('about')">About</a>
+    <a href="#" onclick="showTab('login')">Login</a>
+    <a href="#" onclick="showTab('signup')">Signup</a>
+  </nav>
+
+  <div id="home" class="tab-content active">
+    <h2>Welcome to Readify</h2>
+    <p>Find books you'll love. Discover new titles by searching or exploring genres.</p>
+    <img src="https://img.freepik.com/free-vector/open-book-concept-illustration_114360-5843.jpg?w=500" alt="Open Book" style="width: 300px; margin-top: 20px;">
+  </div>
+
+  <div id="genre" class="tab-content">
+    <h2>Browse by Genre</h2>
+    <div class="genres">
+      <button onclick="filterBooks('all')">All</button>
+      <button onclick="filterBooks('science')">Science</button>
+      <button onclick="filterBooks('fantasy')">Fantasy</button>
+      <button onclick="filterBooks('realistic')">Realistic</button>
+      <button onclick="filterBooks('historical')">Historical</button>
+    </div>
+  </div>
+
+  <div id="catalogue" class="tab-content">
+    <h2>Book Catalogue</h2>
+    <div class="search-bar">
+      <input type="text" id="searchInput" onkeyup="searchBooks()" placeholder="Search for a book by title...">
+    </div>
+    <div class="book-grid" id="bookList">
+      <div class="book" data-genre="science">
+        <img src="https://covers.openlibrary.org/b/id/240726-S.jpg" alt="A Brief History of Time">
+        <p><a href="https://openlibrary.org/works/OL82563W" target="_blank">A Brief History of Time</a></p>
+        <p>by Stephen Hawking</p>
+      </div>
+      <div class="book" data-genre="fantasy">
+        <img src="https://covers.openlibrary.org/b/id/7984916-S.jpg" alt="Harry Potter">
+        <p><a href="https://openlibrary.org/works/OL82564W" target="_blank">Harry Potter</a></p>
+        <p>by J.K. Rowling</p>
+      </div>
+      <div class="book" data-genre="realistic">
+        <img src="https://covers.openlibrary.org/b/id/8228691-S.jpg" alt="The Fault in Our Stars">
+        <p><a href="https://openlibrary.org/works/OL15729066W" target="_blank">The Fault in Our Stars</a></p>
+        <p>by John Green</p>
+      </div>
+      <div class="book" data-genre="historical">
+        <img src="https://covers.openlibrary.org/b/id/8225631-S.jpg" alt="The Book Thief">
+        <p><a href="https://openlibrary.org/works/OL19395503W" target="_blank">The Book Thief</a></p>
+        <p>by Markus Zusak</p>
+      </div>
+      <div class="book" data-genre="science">
+        <img src="https://covers.openlibrary.org/b/id/295577-S.jpg" alt="Cosmos">
+        <p><a href="https://openlibrary.org/works/OL82565W" target="_blank">Cosmos</a></p>
+        <p>by Carl Sagan</p>
+      </div>
+      <div class="book" data-genre="fantasy">
+        <img src="https://covers.openlibrary.org/b/id/8244151-S.jpg" alt="Eragon">
+        <p><a href="https://openlibrary.org/works/OL82566W" target="_blank">Eragon</a></p>
+        <p>by Christopher Paolini</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="about" class="tab-content">
+    <h2>About Readify</h2>
+    <p>Readify is a lightweight book recommender platform that helps readers explore new books, genres, and authors. We aim to connect readers with the right stories.</p>
+  </div>
+
+  <div id="login" class="tab-content">
+    <h2>Login</h2>
+    <div class="form-container">
+      <input type="text" placeholder="Email or Username">
+      <input type="password" placeholder="Password">
+      <button>Login</button>
+    </div>
+  </div>
+
+  <div id="signup" class="tab-content">
+    <h2>Signup</h2>
+    <div class="form-container">
+      <input type="text" placeholder="Full Name">
+      <input type="email" placeholder="Email">
+      <input type="password" placeholder="Create Password">
+      <button>Create Account</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>Made by Ayush Dubey (UCER, Prayagraj).© 2025 Readify. All rights reserved.</p>
+  </footer>
+
+  <script>
+    function showTab(tabId) {
+      const tabs = document.querySelectorAll('.tab-content');
+      tabs.forEach(tab => tab.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    function filterBooks(genre) {
+      const books = document.querySelectorAll('.book');
+      books.forEach(book => {
+        book.style.display = (genre === 'all' || book.dataset.genre === genre) ? 'block' : 'none';
+      });
+      showTab('catalogue');
+    }
+
+    function searchBooks() {
+      const input = document.getElementById('searchInput').value.toLowerCase();
+      const books = document.querySelectorAll('.book');
+      books.forEach(book => {
+        const title = book.textContent.toLowerCase();
+        book.style.display = title.includes(input) ? 'block' : 'none';
+      });
+    }
+  </script>
+
+</body>
+</html>
